@@ -2,14 +2,15 @@ package application;
 	
 import org.opencv.core.Core;
 
+import controller.FXController;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.fxml.FXMLLoader;
-
+import controller.CameraController;
 
 
 public class Main extends Application {
@@ -55,18 +56,22 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			
 			// load the FXML resource
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("Sample.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ControlPanel.fxml"));
 			// store the root element so that the controllers can use it
-			BorderPane rootElement = (BorderPane) loader.load();
+			AnchorPane rootElement = (AnchorPane) loader.load();
 			// create and style a scene
-			Scene scene = new Scene(rootElement, 800, 600);
+			Scene scene = new Scene(rootElement, 600, 400);
+
+			
+			/*
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			scene1.getStylesheets().add(getClass().getResource("application.css").toExternalForm());*/
 			// create the stage with the given title and the previously created
 			// scene
-			primaryStage.setTitle("JavaFX meets OpenCV");
+			primaryStage.setTitle("Control panel");
 			primaryStage.setScene(scene);
+
 			// show the GUI
 			primaryStage.show();
 			
@@ -100,5 +105,6 @@ public class Main extends Application {
 	public static void main(String[] args) {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		launch(args);
+	
 	}
 }
