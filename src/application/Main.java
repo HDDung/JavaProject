@@ -11,48 +11,11 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.fxml.FXMLLoader;
 import controller.CameraController;
+import controller.CameraController;
 
 
 public class Main extends Application {
-//	public HBox addHBox() {
-//	    HBox hbox = new HBox();
-//	    hbox.setPadding(new Insets(15, 12, 15, 12));
-//	    hbox.setSpacing(10);
-//	    hbox.setStyle("-fx-background-color: #336699;");
-//
-//	    Button but = new Button();
-//		Button but1 = new Button();
-//		
-//		but.setText("Hello");
-//		but.setOnAction(new EventHandler<ActionEvent>() {
-//
-//			@Override
-//			public void handle(ActionEvent event) {
-//				// TODO Auto-generated method stub
-//				System.out.println(12 <= 13 ? 45 : 89);
-//				
-//			}});
-//		
-//		// setting location of button
-//		//but1.setTranslateX(100);
-//		//but1.setTranslateY(0);
-//		but1.setText("Ahihihi"); // name of button
-//		
-//		// action of button
-//		but1.setOnAction(new EventHandler<ActionEvent>() {
-//			@Override
-//			public void handle(ActionEvent event) {
-//				// TODO Auto-generated method stub
-//				System.out.println("Ahihih");
-//				
-//			}});
-//		
-//	    
-//	    hbox.getChildren().addAll(but1, but);
-//
-//	    return hbox;
-//	}
-	
+
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -64,11 +27,7 @@ public class Main extends Application {
 			Scene scene = new Scene(rootElement, 600, 400);
 
 			
-			/*
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			scene1.getStylesheets().add(getClass().getResource("application.css").toExternalForm());*/
-			// create the stage with the given title and the previously created
-			// scene
+		
 			primaryStage.setTitle("Control panel");
 			primaryStage.setScene(scene);
 
@@ -84,19 +43,7 @@ public class Main extends Application {
 				}
 			}));
 			
-			/*
-			//BorderPane root = (BorderPane)FXMLLoader.load(getClass().getResource("Sample.fxml"));
-			BorderPane root = new BorderPane();
-			Scene scene = new Scene(root,500,400);
-			//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			primaryStage.setScene(scene);
-			HBox hbox = addHBox();
-			root.setTop(hbox);
 			
-			
-			
-			primaryStage.show();
-			*/
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

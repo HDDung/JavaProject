@@ -12,7 +12,8 @@ import java.util.Vector;
 import org.opencv.core.Core;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.Objdetect;
-import facial_recognition.Recognizer3;
+
+import facial_recognition.Recognizer;
 
 import org.opencv.core.Scalar;
 import org.opencv.objdetect.CascadeClassifier;
@@ -22,7 +23,7 @@ public class Detector {
 	private String face_cascade_name = "HaarCascade/haarcascade_frontalface_alt_test.xml";
 	private CascadeClassifier face_cascade = new CascadeClassifier(); 
 	private Vector<Mat> unknownFaces;
-	private Recognizer3 rec3;
+	private Recognizer rec3;
 	// flag for Unknowface method
 	private boolean IsCheckUnknown = false;
 
@@ -30,7 +31,7 @@ public class Detector {
 		try 
 		{
 			this.face_cascade.load( face_cascade_name );
-			this.rec3 = new Recognizer3(3);
+			this.rec3 = new Recognizer();
 			System.out.println("Creating finish");
 			this.unknownFaces = new Vector<Mat>();
 		} catch (CvException e){
@@ -77,12 +78,7 @@ public class Detector {
 	}
 	
 	private Mat DrawnFace(MatOfRect ListFaces, Mat frame){
-		/*int thickness = 1;
-		int fontFace = Core.FONT_HERSHEY_TRIPLEX; // font text;
-		double fontScale = 0.5;
-		int baseline;*/
-		
-		
+			
 		for (Rect face : ListFaces.toArray()){
 			
 			

@@ -13,6 +13,7 @@ import org.opencv.videoio.VideoCapture;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import utils.NameFaces;
 import utils.Utils;
 
 import facial_detection.Detector;

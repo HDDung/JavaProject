@@ -18,6 +18,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import utils.NameFaces;
 import utils.Utils;
 
 
@@ -41,14 +42,19 @@ public class FXController
 	private CameraController camera_controller;
 	// Stage of child
 	private Stage camera_stage;
-	private boolean holder = true;
-	
+	private boolean holder_face = true;
+	private boolean holder_name = true;
+	private Vector<String> Names;
 	// the FXML button
 		@FXML
-		private Button button, but_cap, but_detect, NextBut;
+		private Button button, 
+					but_cap, 
+					but_detect, 
+					NextBut,
+					yes, no;
 		// the FXML image view
 		@FXML
-		private ImageView currentFrame;
+		private ImageView currentFrame, checkface;
 		@FXML
 		private TextField Name;
 		
@@ -122,10 +128,11 @@ public class FXController
 	}
 	
 	@FXML 
-	protected void CaptureFace(ActionEvent event) throws InterruptedException{
+	protected void CaptureFace(ActionEvent event){
 		System.out.println("Capture call");
 		Name.clear();
 		final Vector<Mat> unknownFaces = this.camera_controller.UnknownFaces();
+		Names = new Vector<String>();
 		System.out.println(unknownFaces.size());
 		if (!unknownFaces.isEmpty()){
 			Runnable unknown = new Runnable() {
@@ -134,7 +141,7 @@ public class FXController
 						//Mat test = Imgcodecs.imread("Test.bmp");
 						Image imageToShow = Utils.mat2Image(face);
 						CameraController.updateImageView(currentFrame, imageToShow);
-						while (holder){
+						while (holder_face){
 							try {
 								Thread.sleep(100);
 							} catch (InterruptedException e) {
@@ -143,14 +150,13 @@ public class FXController
 							}
 							
 						}
-						holder = true;
+						holder_face = true;
 					}
 				}
 			};
-			
 			ExecutorService run = Executors.newSingleThreadExecutor();
 			run.submit(unknown);
-			holder = true;
+			holder_face = true;
 			run.shutdownNow();
 			
 		} else {
@@ -158,12 +164,7 @@ public class FXController
 		}
 	}
 	
-	@FXML
-	protected void MoveNextImg(ActionEvent event){
-		System.out.println(Name.getText());
-		holder = false;
-		Name.clear();
-	}
+	
 	
 	@FXML 
 	protected void StartDetection(ActionEvent event){
