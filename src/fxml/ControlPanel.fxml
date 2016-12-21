@@ -19,7 +19,7 @@
             <ImageView fx:id="currentFrame" fitHeight="204.0" fitWidth="272.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </StackPane>
-      <Button fx:id="NextBut" layoutX="131.0" layoutY="328.0" mnemonicParsing="false" text="Next" />
+      <Button fx:id="NextBut" layoutX="131.0" layoutY="328.0" mnemonicParsing="false" onAction="#MoveNextImg" text="Next" />
       <StackPane layoutX="364.0" layoutY="182.0" prefHeight="150.0" prefWidth="200.0" style="-fx-padding: 5; -fx-background-color: gray;">
          <children>
             <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />

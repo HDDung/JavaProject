@@ -22,19 +22,15 @@ import core.TrainingPacket;
 public class Recognizer {
 	private boolean State = false;
 	private FaceRecognizer faceRecognizer;
-	private DataHandler handler = new DataHandler();
 	private TrainingPacket packet;
 	public Recognizer(){
 		faceRecognizer = Face.createEigenFaceRecognizer(80, 2500);
-		Training();
 		System.out.println("Recognizer created");
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void Training(){
+	public void Training(TrainingPacket packet){
 		if (State == false){
-			packet = handler.getData("Face_Recog/B");
-			
+			this.packet = packet;
 	        faceRecognizer.train(packet.getImages(), packet.getLabelsBuffer());
 	        System.out.println("Training finish");
 	        State = true;

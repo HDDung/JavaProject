@@ -9,7 +9,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import org.opencv.core.Mat;
 import org.opencv.videoio.VideoCapture;
 
-
+import core.Supervisor;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -33,13 +33,15 @@ public class CameraController
 	// the id of the camera to be used
 	private static int cameraId = 0;
 	// Detector for Facial detection
-	private Detector dtor;
-	
+	private Supervisor manager;
 	public void ActivateDetector(){
-		dtor = new Detector();
+		manager = new Supervisor();
 		IsActivateDetector = true;
 	}
 	
+	public Supervisor Manager(){
+		return manager;
+	}
 	public void DeactivateDetector(){
 		IsActivateDetector = false;
 	}
@@ -55,7 +57,7 @@ public class CameraController
 	
 	
 	public Vector<Mat> UnknownFaces(){
-		return dtor.UnknownFaces(grabFrame());
+		return manager.UnknownFaces(grabFrame());
 	}
 	
 	public void startCamera()
@@ -80,7 +82,7 @@ public class CameraController
 						Mat frame = grabFrame();
 						// convert and show the frame
 						if (IsActivateDetector){
-							Image imageToShow = Utils.mat2Image(dtor.detectAndDisplay(frame));
+							Image imageToShow = Utils.mat2Image(manager.Processframe(frame));
 							CameraController.updateImageView(currentFrame, imageToShow);
 
 						} else {
@@ -187,7 +189,7 @@ public class CameraController
 	 * @param image
 	 *            the {@link Image} to show
 	 */
-	static void updateImageView(ImageView view, Image image)
+	public static void updateImageView(ImageView view, Image image)
 	{
 		Utils.onFXThread(view.imageProperty(), image);
 	}

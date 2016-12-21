@@ -75,6 +75,15 @@ public class DataHandler {
 		}
 	}
 	
+	public boolean IsNameIn(String Name){
+		for (int i = 1; i <= LatestLabel(); i++){
+			if (Name.equals( this.Name.get(i))){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/*
 	 * Checking the algorithm
 	 * */

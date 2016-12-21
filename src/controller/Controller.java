@@ -20,7 +20,7 @@ public class Controller extends StackPane {
     	try {
     		System.out.println("Open new screen");
     		FXMLLoader loader_camera = new FXMLLoader(getClass().getResource(source));
-    		Parent root1 = (Parent) loader_camera.load();
+    		Parent root1 = loader_camera.load();
     		Stage stage = new Stage();
     		stage.setTitle("Camera");
     		stage.setScene(new Scene(root1));

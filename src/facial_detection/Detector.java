@@ -22,18 +22,13 @@ public class Detector {
 	
 	private String face_cascade_name = "HaarCascade/haarcascade_frontalface_alt_test.xml";
 	private CascadeClassifier face_cascade = new CascadeClassifier(); 
-	private Vector<Mat> unknownFaces;
-	private Recognizer rec3;
-	// flag for Unknowface method
-	private boolean IsCheckUnknown = false;
+
 
 	public Detector(){
 		try 
 		{
 			this.face_cascade.load( face_cascade_name );
-			this.rec3 = new Recognizer();
 			System.out.println("Creating finish");
-			this.unknownFaces = new Vector<Mat>();
 		} catch (CvException e){
 			System.err.print("Error loading face cascade");
 		}
@@ -44,7 +39,7 @@ public class Detector {
 		
 	}
 	
-	public Mat detectAndDisplay(Mat frame){
+	public MatOfRect detectAndDisplay(Mat frame){
 		
 		/*
 		 * follow the tutorial from opencv-java-tutorials
@@ -70,31 +65,28 @@ public class Detector {
 		MatOfRect faces = new MatOfRect();
 		
 		// detect faces
-		this.face_cascade.detectMultiScale(grayFrame, faces, 1.1, 2, 0 | Objdetect.CASCADE_SCALE_IMAGE,
+		this.face_cascade.detectMultiScale(grayFrame, faces, 1.1, 2,
+				0 | Objdetect.CASCADE_SCALE_IMAGE,
 				new Size(absoluteFaceSize, absoluteFaceSize), new Size());
 		
-	    return DrawnFace(faces, frame);
+	    return faces;
 		
 	}
 	
-	private Mat DrawnFace(MatOfRect ListFaces, Mat frame){
+	public Mat DrawnFace(MatOfRect ListFaces, Mat frame, Vector<String> name){
 			
+		int count = 0;
 		for (Rect face : ListFaces.toArray()){
 			
 			
-			String text = new String(rec3.Prediction(new Mat(frame, face )));
+			String text = name.elementAt(count++);
 			
 			Imgproc.rectangle(frame, new Point(face.x, face.y), new Point(face.x + face.width, face.y + face.height),
 								new Scalar(0, 255, 0));
 			
 			Imgproc.putText(frame, text, new Point(face.x, face.y), Core.FONT_HERSHEY_TRIPLEX, 0.5,
 					new Scalar(0, 255, 0), 1);
-			if (IsCheckUnknown){
-				
-				if (text.equals("Unknown")){
-					this.unknownFaces.addElement(new Mat(frame, face ));
-				}
-			}
+			
 		}
 			
 		
@@ -102,11 +94,4 @@ public class Detector {
 		
 	}
 	
-	public Vector<Mat> UnknownFaces(Mat frame){
-		IsCheckUnknown = true;
-		unknownFaces.removeAllElements();
-		this.detectAndDisplay(frame);
-		IsCheckUnknown = false;
-		return this.unknownFaces;
-	}
 }

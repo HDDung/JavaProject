@@ -10,9 +10,6 @@ import javafx.stage.WindowEvent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.fxml.FXMLLoader;
-import controller.CameraController;
-import controller.CameraController;
-
 
 public class Main extends Application {
 
@@ -22,7 +19,7 @@ public class Main extends Application {
 			// load the FXML resource
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ControlPanel.fxml"));
 			// store the root element so that the controllers can use it
-			AnchorPane rootElement = (AnchorPane) loader.load();
+			AnchorPane rootElement =  loader.load();
 			// create and style a scene
 			Scene scene = new Scene(rootElement, 600, 400);
 
