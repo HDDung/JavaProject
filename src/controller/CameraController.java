@@ -1,27 +1,25 @@
 package controller;
 
-import java.util.Vector;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
-import java.util.concurrent.ScheduledExecutorService;
-
-import org.opencv.core.Mat;
-import org.opencv.videoio.VideoCapture;
-
 import core.Supervisor;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import utils.NameFaces;
+import org.opencv.core.Mat;
+import org.opencv.videoio.VideoCapture;
 import utils.Utils;
 
-import facial_detection.Detector;
+import java.util.Vector;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 
 public class CameraController
 {
-	@FXML
-	private ImageView currentFrame;
+    // the id of the camera to be used
+    private static int cameraId = 0;
+    @FXML
+    private ImageView currentFrame;
 	// a timer for acquiring the video stream
 	private ScheduledExecutorService timer;
 	// the OpenCV object that realizes the video capture
@@ -30,31 +28,39 @@ public class CameraController
 	private boolean cameraActive = false;
 	// a flag to activate the detector
 	private boolean IsActivateDetector = false;
-	// the id of the camera to be used
-	private static int cameraId = 0;
 	// Detector for Facial detection
 	private Supervisor manager;
-	public void ActivateDetector(){
-		manager = new Supervisor();
+
+    /**
+     * Update the {@link ImageView} in the JavaFX main thread
+     *
+     * @param view  the {@link ImageView} to update
+     * @param image the {@link Image} to show
+     */
+    public static void updateImageView(ImageView view, Image image) {
+        Utils.onFXThread(view.imageProperty(), image);
+    }
+
+    public void ActivateDetector() {
+        manager = new Supervisor();
 		IsActivateDetector = true;
 	}
-	
+
 	public Supervisor Manager(){
 		return manager;
 	}
+
 	public void DeactivateDetector(){
 		IsActivateDetector = false;
 	}
-	public boolean IsActivateDetector()
-	{ 
-		return IsActivateDetector;
+
+    public boolean IsActivateDetector() {
+        return IsActivateDetector;
 	}
-	
-	public boolean IsCameraRun()
-	{ 
-		return cameraActive;
+
+    public boolean IsCameraRun() {
+        return cameraActive;
 	}
-	
 	
 	public Vector<Mat> UnknownFaces(){
 		return manager.UnknownFaces(grabFrame());
@@ -66,16 +72,16 @@ public class CameraController
 		{
 			// start the video capture
 			this.capture.open(cameraId);
-			
-			// is the video stream available?
+
+            // is the video stream available?
 			if (this.capture.isOpened())
 			{
 				this.cameraActive = true;
-				
-				// grab a frame every 33 ms (30 frames/sec)
+
+                // grab a frame every 33 ms (30 frames/sec)
 				Runnable frameGrabber = new Runnable() {
-					
-					@Override
+
+                    @Override
 					public void run()
 					{
 						// effectively grab and process a single frame
@@ -89,22 +95,20 @@ public class CameraController
 							Image imageToShow = Utils.mat2Image(frame);
 							CameraController.updateImageView(currentFrame, imageToShow);
 						}
-						
-					}
+
+                    }
 				};
-				
-				try {
-					this.timer = Executors.newSingleThreadScheduledExecutor();
-					this.timer.scheduleWithFixedDelay(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
+
+                try {
+                    this.timer = Executors.newSingleThreadScheduledExecutor();
+                    this.timer.scheduleWithFixedDelay(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
 				} catch (Exception e){
 					System.err.println("Cannot create timer");
 				}
 				// update the button content
-				
-			}
-			else
-			{
-				// log the error
+
+            } else {
+                // log the error
 				System.err.println("Impossible to open the camera connection...");
 			}
 		}
@@ -113,8 +117,8 @@ public class CameraController
 			// the camera is not active at this point
 			this.cameraActive = false;
 			// update again the button content
-			
-			// stop the timer
+
+            // stop the timer
 			this.stopAcquisition();
 		}
 	}
@@ -128,33 +132,27 @@ public class CameraController
 	{
 		// init everything
 		Mat frame = new Mat();
-		
-		// check if the capture is open
+
+        // check if the capture is open
 		if (this.capture.isOpened())
 		{
 			try
 			{
 				// read the current frame
 				this.capture.read(frame);
-				
-				// if the frame is not empty, process it
-				if (!frame.empty())
-				{
-					//Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
-				}
-				
-			}
+
+            }
 			catch (Exception e)
 			{
 				// log the error
 				System.err.println("Exception during the image elaboration: " + e);
 			}
 		}
-		
-		return frame;
+
+        return frame;
 	}
-	
-	/**
+
+    /**
 	 * Stop the acquisition from the camera and release all the resources
 	 */
 	private void stopAcquisition()
@@ -173,25 +171,12 @@ public class CameraController
 				System.err.println("Exception in stopping the frame capture, trying to release the camera now... " + e);
 			}
 		}
-		
-		if (this.capture.isOpened())
+
+        if (this.capture.isOpened())
 		{
 			// release the camera
 			this.capture.release();
 		}
-	}
-	
-	/**
-	 * Update the {@link ImageView} in the JavaFX main thread
-	 * 
-	 * @param view
-	 *            the {@link ImageView} to update
-	 * @param image
-	 *            the {@link Image} to show
-	 */
-	public static void updateImageView(ImageView view, Image image)
-	{
-		Utils.onFXThread(view.imageProperty(), image);
 	}
 	
 	/**
