@@ -1,10 +1,11 @@
 package core;
 
+import facial_recognition.Constants;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.Imgproc;
+import utils.Utils;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -27,9 +28,8 @@ public class DataHandler {
 
 		System.out.print("Name will be write: " + Name);
 		if (!face.empty() && !Name.isEmpty()) {
-			Imgproc.resize(face, face, standardImgSize);
-			Imgproc.cvtColor(face, face, Imgproc.COLOR_BGR2GRAY);
-			Imgcodecs.imwrite(Name, face);
+			Mat temp = Utils.toGrayScale(Utils.resizeFace(face));
+			Imgcodecs.imwrite(Name, temp);
 		} else {
 			System.err.println("written Face is empty");
 		}
@@ -50,7 +50,7 @@ public class DataHandler {
 
         File[] imageFiles = root.listFiles(imgFilter);
 
-		images = new ArrayList<Mat>(imageFiles.length);
+		images = new ArrayList<>(imageFiles.length);
 
         labelsBuffer = new MatOfInt(new int[imageFiles.length]);
 
@@ -58,10 +58,11 @@ public class DataHandler {
 
         for (File image : imageFiles) {
         	// Get Img from directory
-            Mat img = Imgcodecs.imread(image.getAbsolutePath(), Imgcodecs.CV_LOAD_IMAGE_GRAYSCALE);
-            StandardImgSize = img.size();
-            //
-            Integer label = new Integer(Integer.parseInt(image.getName().split("\\-")[0]));
+			final Mat img = Utils.resizeFace(Imgcodecs.imread(image.getAbsolutePath(), Imgcodecs.CV_LOAD_IMAGE_GRAYSCALE));
+
+			StandardImgSize = Constants.TRAIN_FACE_IMAGE_SIZE;
+			//
+			final Integer label = new Integer(Integer.parseInt(image.getName().split("\\-")[0]));
 
             // Each ID (label) have a name
             this.Name.put(label, image.getName().split("\\-")[1]);
@@ -77,11 +78,18 @@ public class DataHandler {
 
 
 			images.add(img);
+			System.out.print(" " + label);
 
-            labelsBuffer.put(counter++, 0, label.intValue());
+			labelsBuffer.put(counter++, 0, label);
 
             counter++;
         }
+		System.out.println();
+		System.out.println(Name);
+		System.out.println(ID_Number);
+		System.out.println(labelsBuffer.toList());
+
+
 		trainingPacket = new TrainingPacket(images, labelsBuffer, StandardImgSize, Name);
 	}
 

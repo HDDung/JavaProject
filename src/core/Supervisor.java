@@ -7,6 +7,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Rect;
 import org.opencv.core.Size;
+import org.opencv.imgcodecs.Imgcodecs;
 
 import java.util.Vector;
 
@@ -34,6 +35,7 @@ public class Supervisor {
 	}
 
 	private Vector<RecognizedFace> PredictionFace(MatOfRect faces, Mat frame) {
+		System.out.println(recognizer.Prediction(Imgcodecs.imread("Face_Recog/B/3-Anh-1-.bmp")).getName());
 		Vector<RecognizedFace> result = new Vector<>();
 		for (Rect face : faces.toArray()){
 			result.addElement(recognizer.Prediction(new Mat(frame, face)));
@@ -48,9 +50,9 @@ public class Supervisor {
 			ID = ShowImg(handler.ListID(name));
 			if (ID != null) {
 				if (ID.intValue() >= 0) {
-					result = "Face_Recog/B/" + ID + "-" + name + "-" + new Integer(handler.NumOfIn(ID) + 1).toString() + "-.bmp";
+					result = trainingDir + "/" + ID + "-" + name + "-" + new Integer(handler.NumOfIn(ID) + 1).toString() + "-.bmp";
 				} else if (ID.intValue() == -1) {
-					result = "Face_Recog/B/" + new Integer(handler.LatestLabel() + 1).toString() + "-" + name + "-1-.bmp";
+					result = trainingDir + "/" + new Integer(handler.LatestLabel() + 1).toString() + "-" + name + "-1-.bmp";
 				} else {
 					result = null;
 				}
@@ -60,7 +62,7 @@ public class Supervisor {
 
 		} else {
 			//index-name-1-.bmp
-			result = "Face_Recog/B/" + new Integer(handler.LatestLabel() + 1).toString() + "-" + name + "-1-.bmp";
+			result = trainingDir + "/" + new Integer(handler.LatestLabel() + 1).toString() + "-" + name + "-1-.bmp";
 		}
 		System.out.println(result);
 		return result;
@@ -69,15 +71,14 @@ public class Supervisor {
 	private Integer ShowImg(Vector<Integer> ListID) {
 
 		Vector<Mat> ListFace = new Vector<>();
-		System.out.println(ListID.size());
-		System.out.println(ListID.get(0));
+
 		for (int i = 0; i < ListID.size(); i++) {
 			ListFace.add(handler.GetFaceOf(ListID.get(i)));
 		}
-		System.out.println(ListID);
-		System.out.println(ListFace);
+
 		AlertBox alertBox = new AlertBox();
 		Integer num = alertBox.displayImg(ListFace);
+
 		if (num.equals(-1)) {
 			System.out.println("Not the same face in database");
 			return new Integer(-1);
@@ -91,7 +92,7 @@ public class Supervisor {
 	}
 	// can be change to static
 	public Vector<Mat> UnknownFaces(Mat frame){
-		unknownFaces = new Vector<Mat>();
+		unknownFaces = new Vector<>();
 		MatOfRect faces = detector.detectAndDisplay(frame);
 		Vector<RecognizedFace> name = PredictionFace(faces, frame);
 		

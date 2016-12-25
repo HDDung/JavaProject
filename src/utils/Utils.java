@@ -1,14 +1,15 @@
 package utils;
 
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-
-import org.opencv.core.Mat;
-
+import facial_recognition.Constants;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
+import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
+
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 
 /**
  * Provide general purpose methods for handling OpenCV-JavaFX data conversion.
@@ -59,7 +60,7 @@ public final class Utils
 	}
 	
 	/**
-	 * Support for the {@link mat2image()} method
+	 * Support for the {@link //mat2image()} method
 	 * 
 	 * @param original
 	 *            the {@link Mat} object in BGR or grayscale
@@ -85,5 +86,17 @@ public final class Utils
 		System.arraycopy(sourcePixels, 0, targetPixels, 0, sourcePixels.length);
 		
 		return image;
+	}
+
+	public static Mat toGrayScale(Mat image) {
+		Mat grayImage = new Mat();
+		Imgproc.cvtColor(image, grayImage, Imgproc.COLOR_BGR2GRAY);
+		return grayImage;
+	}
+
+	public static Mat resizeFace(Mat originalImage) {
+		Mat resizedImage = new Mat();
+		Imgproc.resize(originalImage, resizedImage, Constants.TRAIN_FACE_IMAGE_SIZE);
+		return resizedImage;
 	}
 }

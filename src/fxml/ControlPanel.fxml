@@ -8,11 +8,11 @@
             minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8"
             fx:controller="controller.FXController">
    <children>
-       <Button fx:id="button" layoutX="409.0" layoutY="100.0" mnemonicParsing="false" onAction="#startCamera"
+       <Button fx:id="button" layoutX="404.0" layoutY="58.0" mnemonicParsing="false" onAction="#startCamera"
                prefHeight="25.0" prefWidth="122.0" text="Start Camera"/>
-       <Button fx:id="but_cap" layoutX="409.0" layoutY="149.0" mnemonicParsing="false" onAction="#CaptureFace"
+       <Button fx:id="but_cap" layoutX="404.0" layoutY="138.0" mnemonicParsing="false" onAction="#CaptureFace"
                prefHeight="25.0" prefWidth="122.0" text="Capture Img"/>
-       <Button fx:id="but_detect" layoutX="409.0" layoutY="199.0" mnemonicParsing="false" onAction="#StartDetection"
+       <Button fx:id="but_detect" layoutX="404.0" layoutY="100.0" mnemonicParsing="false" onAction="#StartDetection"
                text="Facial detection"/>
       <TextField fx:id="Name" layoutX="43.0" layoutY="289.0" prefHeight="25.0" prefWidth="275.0" />
       <StackPane layoutX="40.0" layoutY="38.0" prefHeight="150.0" prefWidth="200.0" style="-fx-padding: 10; -fx-background-color: gray;">
@@ -21,5 +21,6 @@
          </children>
       </StackPane>
       <Button fx:id="NextBut" layoutX="131.0" layoutY="328.0" mnemonicParsing="false" onAction="#MoveNextImg" text="Next" />
+       <TextArea fx:id="console" layoutX="343.0" layoutY="200.0" prefHeight="168.0" prefWidth="244.0"/>
    </children>
 </AnchorPane>

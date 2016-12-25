@@ -11,7 +11,7 @@ public class RecognizedFace {
     private final Double confidence;
 
     public RecognizedFace(String name, Double confidence) {
-        this.confidence = ((Recognizer.RECOGNITION_THRESHOLD - confidence) / Recognizer.RECOGNITION_THRESHOLD) * 100;
+        this.confidence = ((Constants.RECOGNITION_THRESHOLD - confidence) / Constants.RECOGNITION_THRESHOLD) * 100;
         this.name = name;
     }
 

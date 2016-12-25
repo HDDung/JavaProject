@@ -5,20 +5,18 @@ import core.TrainingPacket;
 import org.opencv.core.Mat;
 import org.opencv.face.Face;
 import org.opencv.face.FaceRecognizer;
-import org.opencv.imgproc.Imgproc;
-
+import utils.Utils;
 
 
 public class Recognizer {
-	public static final double RECOGNITION_THRESHOLD = 1500;
+	final private FaceRecognizer faceRecognizer;
 	private boolean State = false;
-	private FaceRecognizer faceRecognizer;
 	private TrainingPacket packet;
 	private double[] confidence;
 	private int[] labels;
 
 	public Recognizer(){
-		faceRecognizer = Face.createEigenFaceRecognizer(80, 2500);
+		faceRecognizer = Face.createFisherFaceRecognizer();
 		System.out.println("Recognizer created");
 	}
 	
@@ -29,17 +27,19 @@ public class Recognizer {
 			confidence = new double[packet.getName().size()];
 			labels = new int[packet.getName().size()];
 			System.out.println("Training finish");
+			System.out.println("Summary: #Name-" + packet.getName().size() +
+					"#Faces-" + packet.getImages().size());
 			State = true;
 		}
 	}
 
-	public RecognizedFace Prediction(Mat testImage) {
+	public RecognizedFace Prediction(final Mat testImage) {
 
-		Mat temp = new Mat();
-		Imgproc.cvtColor(testImage, temp, Imgproc.COLOR_BGR2GRAY);
-    	Imgproc.resize(temp, temp, packet.getStandardImgSize());
+		final Mat temp = Utils.resizeFace(Utils.toGrayScale(testImage));
+		System.out.println(faceRecognizer.predict(temp));
 		faceRecognizer.predict(temp, labels, confidence);
-		if (confidence[0] < RECOGNITION_THRESHOLD && labels[0] != 0) {
+		System.out.println(confidence[0] + "   " + labels[0]);
+		if (confidence[0] < Constants.RECOGNITION_THRESHOLD && labels[0] != 0) {
 
 			//System.out.println("Predicted label: " + predictedLabel.toString() + " Name: " + Name.get(predictedLabel.intValue()));
 			return new RecognizedFace(packet.getName().get(labels[0]), confidence[0]);

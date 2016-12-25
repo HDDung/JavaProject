@@ -24,10 +24,6 @@ public class Detector {
 		} catch (CvException e){
 			System.err.print("Error loading face cascade");
 		}
-		
-		
-		
-		
 	}
 	
 	public MatOfRect detectAndDisplay(Mat frame){

@@ -8,15 +8,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.opencv.core.Mat;
+import utils.Console;
 import utils.Utils;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -58,6 +61,17 @@ public class FXController
 		private ImageView currentFrame;
 		@FXML
 		private TextField Name;
+	@FXML
+	private TextArea console;
+
+	private PrintStream ps;
+
+	public void initialize() {
+		ps = new PrintStream(new Console(console));
+		System.setOut(ps);
+		System.setErr(ps);
+	}
+
 
 	/**
 	 * The action triggered by pushing the button on the GUI
@@ -136,7 +150,6 @@ public class FXController
 			System.out.println("Capture call");
 			Name.clear();
 			final Vector<Mat> unknownFaces = this.camera_controller.UnknownFaces();
-			System.out.println(unknownFaces.size());
 			if (!unknownFaces.isEmpty()) {
 				Runnable unknown = () -> {
 					for (Mat face : unknownFaces) {
@@ -166,10 +179,10 @@ public class FXController
 				run.shutdownNow();
 
 			} else {
-				System.out.println("No unknown face");
+				System.err.println("No unknown face");
 			}
 		} else {
-			System.out.println("Need to open detector");
+			System.err.println("Need to open detector");
 		}
 	}
 
@@ -201,11 +214,11 @@ public class FXController
 				Namefile = new String();
 				camera_controller.Manager().updateDatabase();
 			} else {
-				System.out.print("Please insert Name");
+				System.err.print("Please insert Name");
 			}
 			Name.clear();
 		} else {
-			System.out.println("No more unknown face");
+			System.err.println("No more unknown face");
 
 		}
 	}
