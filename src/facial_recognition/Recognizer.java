@@ -1,28 +1,22 @@
 package facial_recognition;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+
+import core.TrainingPacket;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfInt;
-import org.opencv.core.Size;
 import org.opencv.face.Face;
 import org.opencv.face.FaceRecognizer;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-
-import core.DataHandler;
-import core.TrainingPacket;
 
 
 
 public class Recognizer {
+	public static final double RECOGNITION_THRESHOLD = 1500;
 	private boolean State = false;
 	private FaceRecognizer faceRecognizer;
 	private TrainingPacket packet;
+	private double[] confidence;
+	private int[] labels;
+
 	public Recognizer(){
 		faceRecognizer = Face.createEigenFaceRecognizer(80, 2500);
 		System.out.println("Recognizer created");
@@ -32,28 +26,28 @@ public class Recognizer {
 		if (State == false){
 			this.packet = packet;
 	        faceRecognizer.train(packet.getImages(), packet.getLabelsBuffer());
-	        System.out.println("Training finish");
-	        State = true;
+			confidence = new double[packet.getName().size()];
+			labels = new int[packet.getName().size()];
+			System.out.println("Training finish");
+			State = true;
 		}
 	}
-	public String Prediction(Mat testImage){
-		if (testImage == null){
-	        testImage = Imgcodecs.imread("Face_Recog/face27.bmp", Imgcodecs.CV_LOAD_IMAGE_GRAYSCALE);
-		}
+
+	public RecognizedFace Prediction(Mat testImage) {
+
 		Mat temp = new Mat();
 		Imgproc.cvtColor(testImage, temp, Imgproc.COLOR_BGR2GRAY);
     	Imgproc.resize(temp, temp, packet.getStandardImgSize());
-      
-    	
-        Integer predictedLabel = new Integer(faceRecognizer.predict(temp));
-        if (predictedLabel.intValue() != 0){
-        	//System.out.println("Predicted label: " + predictedLabel.toString() + " Name: " + Name.get(predictedLabel.intValue()));
-    		return packet.getName().get(predictedLabel.intValue());
-        } 
-    	//System.out.println("Predicted label: " + predictedLabel.toString() + " Name: Unknown");
+		faceRecognizer.predict(temp, labels, confidence);
+		if (confidence[0] < RECOGNITION_THRESHOLD && labels[0] != 0) {
 
-        return "Unknown";
-        
+			//System.out.println("Predicted label: " + predictedLabel.toString() + " Name: " + Name.get(predictedLabel.intValue()));
+			return new RecognizedFace(packet.getName().get(labels[0]), confidence[0]);
+		}
+		//System.out.println("Predicted label: " + predictedLabel.toString() + " Name: Unknown");
+
+		return new RecognizedFace("Unknown", 0.0);
+
 	}
 	
 	

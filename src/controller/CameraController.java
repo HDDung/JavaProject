@@ -31,41 +31,17 @@ public class CameraController
 	// Detector for Facial detection
 	private Supervisor manager;
 
+	public static void updateImageView(ImageView view, Image image) {
+		Utils.onFXThread(view.imageProperty(), image);
+	}
+	
     /**
      * Update the {@link ImageView} in the JavaFX main thread
      *
-     * @param view  the {@link ImageView} to update
-     * @param image the {@link Image} to show
-     */
-    public static void updateImageView(ImageView view, Image image) {
-        Utils.onFXThread(view.imageProperty(), image);
-    }
+	 * @param \\view  the {@link ImageView} to update
+	 * @param \\image the {@link Image} to show
+	 */
 
-    public void ActivateDetector() {
-        manager = new Supervisor();
-		IsActivateDetector = true;
-	}
-
-	public Supervisor Manager(){
-		return manager;
-	}
-
-	public void DeactivateDetector(){
-		IsActivateDetector = false;
-	}
-
-    public boolean IsActivateDetector() {
-        return IsActivateDetector;
-	}
-
-    public boolean IsCameraRun() {
-        return cameraActive;
-	}
-	
-	public Vector<Mat> UnknownFaces(){
-		return manager.UnknownFaces(grabFrame());
-	}
-	
 	public void startCamera()
 	{
 		if (!this.cameraActive) // if program not run, it run, if already run, it go to else block
@@ -88,7 +64,7 @@ public class CameraController
 						Mat frame = grabFrame();
 						// convert and show the frame
 						if (IsActivateDetector){
-							Image imageToShow = Utils.mat2Image(manager.Processframe(frame));
+							Image imageToShow = Utils.mat2Image(manager.ImgProcessor(frame));
 							CameraController.updateImageView(currentFrame, imageToShow);
 
 						} else {
@@ -122,7 +98,7 @@ public class CameraController
 			this.stopAcquisition();
 		}
 	}
-	
+
 	/**
 	 * Get a frame from the opened video stream (if any)
 	 *
@@ -152,7 +128,7 @@ public class CameraController
         return frame;
 	}
 
-    /**
+	/**
 	 * Stop the acquisition from the camera and release all the resources
 	 */
 	private void stopAcquisition()
@@ -178,7 +154,7 @@ public class CameraController
 			this.capture.release();
 		}
 	}
-	
+
 	/**
 	 * On application close, stop the acquisition from the camera
 	 */
@@ -187,5 +163,28 @@ public class CameraController
 		this.stopAcquisition();
 	}
 
-	
+	public void ActivateDetector() {
+		manager = new Supervisor();
+		IsActivateDetector = true;
+	}
+
+	public Supervisor Manager() {
+		return manager;
+	}
+
+	public void DeactivateDetector() {
+		IsActivateDetector = false;
+	}
+
+	public boolean IsActivateDetector() {
+		return IsActivateDetector;
+	}
+
+	public boolean IsCameraRun() {
+		return cameraActive;
+	}
+
+	public Vector<Mat> UnknownFaces() {
+		return manager.UnknownFaces(grabFrame());
+	}
 }

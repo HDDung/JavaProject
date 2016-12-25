@@ -1,22 +1,14 @@
 package facial_detection;
 
-import org.opencv.core.CvException;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfRect;
-import org.opencv.core.Point;
-import org.opencv.core.Rect;
-import org.opencv.core.Size;
-
-import java.util.Vector;
-
-import org.opencv.core.Core;
+import facial_recognition.RecognizedFace;
+import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.objdetect.Objdetect;
 
-import facial_recognition.Recognizer;
-
-import org.opencv.core.Scalar;
-import org.opencv.objdetect.CascadeClassifier;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.Vector;
 
 public class Detector {
 	
@@ -28,11 +20,10 @@ public class Detector {
 		try 
 		{
 			this.face_cascade.load( face_cascade_name );
-			System.out.println("Creating finish");
+			System.out.println("Finish creating detector");
 		} catch (CvException e){
 			System.err.print("Error loading face cascade");
 		}
-		//rec3.Prediction();
 		
 		
 		
@@ -72,24 +63,23 @@ public class Detector {
 	    return faces;
 		
 	}
-	
-	public Mat DrawnFace(MatOfRect ListFaces, Mat frame, Vector<String> name){
-			
+
+	public Mat DrawnFace(MatOfRect ListFaces, Mat frame, Vector<RecognizedFace> name) {
+		DecimalFormat df = new DecimalFormat("#.##");
+		df.setRoundingMode(RoundingMode.CEILING);
 		int count = 0;
 		for (Rect face : ListFaces.toArray()){
-			
-			
-			String text = name.elementAt(count++);
-			
+			String text = name.elementAt(count).getName() + " - " +
+					df.format(name.elementAt(count).getConfidence()).toString() + "%";
+			count++;
+			// draw rectangle
 			Imgproc.rectangle(frame, new Point(face.x, face.y), new Point(face.x + face.width, face.y + face.height),
 								new Scalar(0, 255, 0));
-			
-			Imgproc.putText(frame, text, new Point(face.x, face.y), Core.FONT_HERSHEY_TRIPLEX, 0.5,
-					new Scalar(0, 255, 0), 1);
-			
+
+			Imgproc.putText(frame, text, new Point(face.x, face.y), Core.FONT_HERSHEY_TRIPLEX, 1,
+					new Scalar(0, 255, 0), 2);
 		}
-			
-		
+
 		return frame;
 		
 	}
